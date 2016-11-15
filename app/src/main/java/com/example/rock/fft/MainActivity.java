@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void LoadDataFromSound(int index) throws  Exception{
         byte[] byteData = null;
-        int amount_read_byte_once = 64;
+        int amount_read_byte_once = 1024;
         byteData = new byte[amount_read_byte_once];
 
         toTransform = new double[amount_read_byte_once*2];
@@ -322,6 +322,9 @@ public class MainActivity extends AppCompatActivity {
             //long len = mFile.length();
             try {
                 //replace here with your input stream from mic
+                //MediaFormat, MediaExtractor
+                //raw data = PCM data.
+                //wav..
                 ret = in.read(byteData, 0, amount_read_byte_once);
             }catch (Exception e){
                 Log.d("test","test");
@@ -332,6 +335,7 @@ public class MainActivity extends AppCompatActivity {
             }
             try {
                 transformer.complexForward(toTransform);
+                //every thing is perfect.
             }catch (Exception e){
                 Log.d("error","FFT error");
             }
@@ -340,15 +344,25 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0; i < toTransform.length / 2; ++i) {
                 double re  = toTransform[2*i];
                 double im  = toTransform[2*i+1];
-                double mag = Math.sqrt(re * re + im * im);
+                double mag = (Math.sqrt(re * re + im * im));
                 if(mag > maxMag) {
                     maxMag = mag;
                     maxInd = i;
                 }
+                /////////////////////////////////////////////until here, everything is perfect//////////////////////////////////
+                /////////////////////////////////////////
+                /// listener////////////////
+                //SEA Lite application.. draw the graph for every byte..
+                // I draw the graph based on sample data of  64 byte.
+//                peak_magnitude[count_numbers*amount_read_byte_once+i] = mag;
+//                peak_frequencies[count_numbers*amount_read_byte_once+i] = (double)mSampleRate * i / (toTransform.length);
             }
             try {
+                //here's the problem.. I made the sample data every 64 byte... but most of case, applications draw the data for every seconds..
+                /// and extract the peak point../
                 peak_magnitude[count_numbers] = maxMag;
-                peak_frequencies[count_numbers] = (double)mSampleRate * maxInd / (toTransform.length / 2);
+                //index....
+                peak_frequencies[count_numbers] = (double)mSampleRate * maxInd / (toTransform.length);
             }catch (Exception e){
                 Log.d("exception","exception");
             }
@@ -362,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void DrawGraphBasedFrequencyMagnitude(double[] peak_frequencies, double[] peak_magnitude){
-            //now I have some sample datas with magnitude, frequency, I will draw graph with this datas
+            //now I have sample datas with magnitude, frequency, I will draw graph with this datas
             double[] normal_freq_array = new double[peak_frequencies.length];
             double[]  normal_mag_array = new double[peak_magnitude.length];
             imageView.setX(peak_frequencies);

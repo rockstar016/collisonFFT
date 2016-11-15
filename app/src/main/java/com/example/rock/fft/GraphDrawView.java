@@ -139,9 +139,11 @@ public class GraphDrawView extends View {
             float interval_width= canvas.getWidth() * 0.1f;
 
             for(int i = 0; i < x.length; i ++){
-                canvas.drawLine((float) x[i] * widith + interval_width,     (height + interval_height) ,
-                                             (float) x[i] * widith + interval_width,     (float) (1 - y[i]) * height + interval_height,       magnitude_paint);
+                canvas.drawCircle((float)x[i]* widith + interval_width, (float) (1 - y[i]) * height + interval_height, 3.f, magnitude_paint);
+//                canvas.drawLine((float) x[i] * widith + interval_width,     (height + interval_height) ,
+//                                             (float) x[i] * widith + interval_width,     (float) (1 - y[i]) * height + interval_height,       magnitude_paint);
             }
+
             float interval_horizontal_line = height / 10;
             float interval_vertical_line = widith / 10;
             float interval_gap_mag = (float) (max_mag - min_mag) / 10;
